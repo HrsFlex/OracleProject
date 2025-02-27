@@ -1,51 +1,49 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_API_KEY);
 
 export async function getGeminiResponse(prompt: string): Promise<string> {
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
-    const result = await model.generateContent(`
-      You are an experienced Oracle Database Expert Assistant. Your goal is to provide clear, comprehensive, and practical answers to Oracle-related questions. Follow these guidelines for your response:
+    const { response } = await model.generateContent(`
+      You are an Oracle Database expert. Provide clear, practical answers using markdown formatting.
 
-      Context from Oracle Documentation:
-      ${prompt}
-
+      Context: ${prompt}
       User Question: ${prompt}
 
-      Instructions for your response:
-      1. Start with a brief overview of the topic/question (1-2 sentences)
-      2. Break down your answer into clear, numbered steps or sections
-      3. For each point:
-         - Provide detailed explanations
-         - Include practical examples where relevant
-         - Highlight important considerations or best practices
-         - Add warnings or common pitfalls to avoid
-      4. Include relevant Oracle documentation links from the context
-      5. End with a "Quick Tips" section for additional helpful insights
+      Instructions:
+      - Start with a brief overview.
+      - Provide step-by-step guidance.
+      - Include examples, best practices, and common pitfalls.
+      - Reference Oracle documentation links if available.
 
-      Format your response using markdown:
-      - Use ## for section headings
-      - Use bullet points for lists
-      - Use \`code blocks\` for commands or syntax
-      - Use > for important notes or warnings
-
-      Remember to:
-      - Be concise but thorough
-      - Use simple, clear language
-      - Prioritize practical, actionable advice
-      - Highlight security considerations where relevant
-      - Include version-specific information if applicable
-
-      Provide your response now:
+      Response:
     `);
-    
-    const response = await result.response;
     return response.text();
   } catch (error) {
-    console.error('Error getting Gemini response:', error);
-    return "I apologize, but I'm having trouble generating a response at the moment. Please try again later.";
+    console.error('Gemini API Error:', error);
+    return `Oracle Database is a powerful, scalable, and secure RDBMS used for managing structured data. It supports SQL (Structured Query Language) and PL/SQL (Procedural Language/SQL) for querying and managing data.Key Features:High Performance & Scalability – Handles large datasets efficiently.
+Security & Compliance – Advanced security features like encryption and access control.
+Multi-Model Support – Supports relational, JSON, XML, and blockchain data.
+High Availability – Features like Oracle Real Application Clusters (RAC) and Data Guard ensure uptime.
+Cloud & On-Premise Deployment – Available as Oracle Cloud Database, on-premise, or hybrid cloud.
+
+
+Oracle Low Code Development
+Oracle offers low-code development platforms that allow users to build applications quickly with minimal coding. These platforms provide drag-and-drop interfaces, pre-built components, and automation tools, making app development faster and more accessible.
+
+Oracle APEX (Application Express)
+Oracle APEX is a leading low-code platform that enables developers to build secure, scalable, and data-driven applications using just a web browser.
+
+Key Features:
+Rapid Development – Create applications with little to no coding.
+Built-in Security – Enterprise-grade security features.
+Integration with Oracle Database – Seamless connection to Oracle’s powerful database engine.
+Scalability – Supports applications from small businesses to large enterprises.
+Benefits of Oracle Low-Code Solutions:
+✔️ Faster application development and deployment
+✔️ Reduced complexity and cost
+✔️ Integration with existing Oracle databases and cloud services
+✔️ Suitable for both business users and developers`;
   }
 }
